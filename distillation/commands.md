@@ -44,31 +44,28 @@ Output:
 distillation/data/teacher_raw.jsonl
 ```
 
-## 4. Filter teacher answers
+## 4. Clean teacher answers
 
 ```bash
-python distillation/scripts/filter_teacher_outputs.py \
+python distillation/scripts/clean_teacher_dataset.py \
   --input distillation/data/teacher_raw.jsonl \
-  --output distillation/data/teacher_filtered.jsonl \
-  --min_words 5 \
-  --max_words 1000 \
-  --min_unique_ratio 0.45 \
-  --sample_preview 20
+  --output distillation/data/teacher_clean.jsonl \
+  --min_words 5
 ```
 
 Output:
 
 ```text
-distillation/data/teacher_filtered.jsonl
+distillation/data/teacher_clean.jsonl
 ```
 
-Read the preview before training.
+Open the file and read some examples before training.
 
 ## 5. Split train/eval
 
 ```bash
 python distillation/scripts/split_jsonl.py \
-  --input distillation/data/teacher_filtered.jsonl \
+  --input distillation/data/teacher_clean.jsonl \
   --train_output distillation/data/teacher_train.jsonl \
   --eval_output distillation/data/teacher_eval.jsonl \
   --eval_ratio 0.1
