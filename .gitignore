@@ -1,0 +1,32 @@
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# training outputs
+runs/
+artifacts/
+checkpoints/
+logs/
+wandb/
+
+# large model/data files
+*.bin
+*.pt
+*.pth
+*.safetensors
+*.gguf
+*.onnx
+*.arrow
+*.parquet
+
+# local data
+/data/raw_*.jsonl
+/data/clean_*.jsonl
+/data/train_*.jsonl
+/data/eval_*.jsonl
+!/data/sample_sft.jsonl
+!/data/sample_pref.jsonl
+
+.env
+.DS_Store
