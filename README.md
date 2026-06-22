@@ -1,6 +1,6 @@
 # Local LLM Finetune Starter Kit
 
-A practical starter kit for running, fine-tuning, evaluating, and serving a local LLM.
+A practical starter kit for running, fine-tuning, distilling, evaluating, and serving a local LLM.
 
 The idea is simple:
 
@@ -11,11 +11,15 @@ This repo is not about training a language model from scratch. It is about takin
 ## What is included
 
 - `scripts/preprocess_jsonl.py` — clean and deduplicate SFT JSONL datasets.
+- `scripts/generate_teacher.py` — generate teacher-model completions for sequence-level distillation.
+- `scripts/filter_teacher_outputs.py` — filter teacher-generated outputs before student training.
 - `scripts/train_sft_hf.py` — supervised fine-tuning with LoRA, QLoRA, or full fine-tuning.
 - `scripts/train_dpo.py` — preference training with DPO.
 - `scripts/merge_lora.py` — merge a LoRA adapter into the base model for serving.
 - `data/sample_sft.jsonl` — tiny supervised fine-tuning sample dataset.
 - `data/sample_pref.jsonl` — tiny preference-training sample dataset.
+- `data/sample_distill_prompts.jsonl` — tiny prompt set for teacher generation.
+- `docs/distillation.md` — distillation workflow and commands.
 - `configs/deepspeed_zero2.json` — basic DeepSpeed ZeRO-2 config.
 - `requirements.txt` — Python dependencies.
 - `commands.md` — copy/paste commands and workflow notes.
@@ -40,6 +44,44 @@ This repo is not about training a language model from scratch. It is about takin
 That is the loop.
 
 Not: download model, become genius.
+
+## Distillation workflow
+
+Distillation is how you use a stronger model to manufacture training signal for a smaller model.
+
+The practical local path is sequence-level distillation:
+
+1. Write prompts that look like your real use case.
+2. Generate answers from a stronger teacher model.
+3. Filter and inspect the teacher outputs.
+4. Train the smaller student model on the filtered teacher data.
+5. Evaluate on organic prompts the student has never seen.
+
+Generate teacher data:
+
+```bash
+python scripts/generate_teacher.py \
+  --teacher_model /models/teacher-model \
+  --input_file data/sample_distill_prompts.jsonl \
+  --output_file data/teacher_raw.jsonl \
+  --max_new_tokens 256 \
+  --temperature 0.7 \
+  --top_p 0.9 \
+  --do_sample
+```
+
+Filter teacher data:
+
+```bash
+python scripts/filter_teacher_outputs.py \
+  --input data/teacher_raw.jsonl \
+  --output data/teacher_filtered.jsonl \
+  --sample_preview 20
+```
+
+Then split the filtered file into train/eval and train the student with `scripts/train_sft_hf.py`.
+
+Full distillation details live in `docs/distillation.md`.
 
 ## Hardware guidance
 
