@@ -1,0 +1,13 @@
+torch>=2.2
+transformers>=4.44.0
+datasets>=2.20.0
+accelerate>=0.33.0
+peft>=0.12.0
+trl>=0.9.6
+evaluate>=0.4.2
+safetensors>=0.4.3
+bitsandbytes>=0.43.0
+deepseed>=0.0.1
+# Use deepspeed instead of the typo above if your platform supports it.
+# pip install deepspeed
+tensorboard>=2.17.0
