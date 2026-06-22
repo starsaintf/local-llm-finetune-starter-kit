@@ -1,18 +1,16 @@
 # Distillation Workflow
 
-Use this folder when you do not have enough good examples, but you do have access to a stronger model that can write good answers for you.
+Use this folder when you want a stronger model to create examples for a smaller local model.
 
 Distillation means:
 
-> Use a stronger teacher model to create training examples, then train a smaller student model on those examples.
-
-This is different from normal fine-tuning.
+> Teacher model writes examples. Student model learns from those examples.
 
 Fine-tuning starts with examples you already have.
 
-Distillation starts by making examples with a teacher model.
+Distillation starts by creating examples with a teacher model.
 
-## What is in this folder
+## Folder structure
 
 ```text
 distillation/
@@ -21,39 +19,30 @@ distillation/
 ├── START_HERE.md
 ├── scripts/
 │   ├── generate_teacher.py
-│   ├── filter_teacher_outputs.py
+│   ├── clean_teacher_dataset.py
 │   └── split_jsonl.py
 └── data/
     └── sample_prompts.jsonl
 ```
 
-## The noob version
-
-You need two models:
-
-- Teacher model: smarter, bigger, or more expensive. It writes the answers.
-- Student model: smaller and cheaper. It learns from the teacher answers.
-
-You will do this:
+## Simple path
 
 1. Write prompts in `distillation/data/prompts.jsonl`.
-2. Run the teacher model on those prompts.
-3. Save teacher answers to `distillation/data/teacher_raw.jsonl`.
-4. Filter weak teacher answers.
-5. Split the filtered file into train/eval.
-6. Train the student using the fine-tuning trainer.
+2. Generate teacher answers with `generate_teacher.py`.
+3. Save raw answers to `distillation/data/teacher_raw.jsonl`.
+4. Clean the raw file with `clean_teacher_dataset.py`.
+5. Split the clean file with `split_jsonl.py`.
+6. Train the student with `finetuning/scripts/train_sft_hf.py`.
 7. Test the student on new prompts.
 
-## Start with this
+## Start here
 
 Read `distillation/START_HERE.md` first.
 
 Then use `distillation/commands.md` for copy/paste commands.
 
-## Important warning
+## Reminder
 
-The teacher is not always right.
+Read a sample of the teacher answers before training.
 
-Read some of the teacher outputs before training the student.
-
-Bad teacher data becomes bad student behavior.
+The student learns from whatever examples you give it.
