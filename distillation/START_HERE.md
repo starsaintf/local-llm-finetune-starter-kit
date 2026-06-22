@@ -40,15 +40,15 @@ Example:
 
 Replace those paths with your actual models.
 
-## The folder you are using
+## The folders you are using
 
-You are working inside:
+Distillation files live here:
 
 ```text
 distillation/
 ```
 
-The fine-tuning trainer lives in:
+The trainer that trains the student lives here:
 
 ```text
 finetuning/scripts/train_sft_hf.py
@@ -99,26 +99,26 @@ distillation/data/teacher_raw.jsonl
 
 That file contains prompt + teacher answer pairs.
 
-## Step 3: filter teacher answers
+## Step 3: clean teacher answers
 
 Run:
 
 ```bash
-python distillation/scripts/filter_teacher_outputs.py \
+python distillation/scripts/clean_teacher_dataset.py \
   --input distillation/data/teacher_raw.jsonl \
-  --output distillation/data/teacher_filtered.jsonl \
-  --sample_preview 20
+  --output distillation/data/teacher_clean.jsonl \
+  --min_words 5
 ```
 
 This creates:
 
 ```text
-distillation/data/teacher_filtered.jsonl
+distillation/data/teacher_clean.jsonl
 ```
 
-Now read the preview.
+Now open the file and read some examples.
 
-If the answers look bad, stop. Fix the prompts or use a better teacher.
+If the answers are weak, stop. Fix the prompts or use a better teacher.
 
 ## Step 4: split train and eval
 
@@ -126,7 +126,7 @@ Run:
 
 ```bash
 python distillation/scripts/split_jsonl.py \
-  --input distillation/data/teacher_filtered.jsonl \
+  --input distillation/data/teacher_clean.jsonl \
   --train_output distillation/data/teacher_train.jsonl \
   --eval_output distillation/data/teacher_eval.jsonl \
   --eval_ratio 0.1
@@ -216,7 +216,7 @@ Go from 50 to 500.
 
 Then 500 to 5,000.
 
-Do not scale bad data.
+Do not scale weak data.
 
 ## Common mistakes
 
