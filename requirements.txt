@@ -7,7 +7,7 @@ trl>=0.9.6
 evaluate>=0.4.2
 safetensors>=0.4.3
 bitsandbytes>=0.43.0
-deepseed; platform_system == 'Never'
-# Install deepspeed manually if needed because Windows/macOS setups can be picky:
-# pip install deepspeed
 tensorboard>=2.17.0
+
+# Optional, install manually if needed:
+# deepspeed
