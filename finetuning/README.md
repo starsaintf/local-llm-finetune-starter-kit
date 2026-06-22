@@ -19,11 +19,9 @@ finetuning/
 ├── scripts/
 │   ├── preprocess_jsonl.py
 │   ├── train_sft_hf.py
-│   ├── train_dpo.py
 │   └── merge_lora.py
 └── data/
-    ├── sample_sft.jsonl
-    └── sample_pref.jsonl
+    └── sample_sft.jsonl
 ```
 
 ## Start here
