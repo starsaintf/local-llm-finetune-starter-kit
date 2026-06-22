@@ -20,13 +20,17 @@ wandb/
 *.arrow
 *.parquet
 
-# local data
-/data/raw_*.jsonl
-/data/clean_*.jsonl
-/data/train_*.jsonl
-/data/eval_*.jsonl
-!/data/sample_sft.jsonl
-!/data/sample_pref.jsonl
+# local fine-tuning data
+finetuning/data/raw_*.jsonl
+finetuning/data/clean_*.jsonl
+finetuning/data/train_*.jsonl
+finetuning/data/eval_*.jsonl
+!finetuning/data/sample_sft.jsonl
+
+# local distillation data
+distillation/data/prompts.jsonl
+distillation/data/teacher_*.jsonl
+!distillation/data/sample_prompts.jsonl
 
 .env
 .DS_Store
