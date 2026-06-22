@@ -103,7 +103,40 @@ python finetuning/scripts/train_sft_hf.py \
   --bf16
 ```
 
-## 7. Watch training
+## 7. Optional DPO preference training
+
+Use this only after SFT if you want the model to prefer one answer style over another.
+
+Create these files:
+
+```text
+finetuning/data/train_pref.jsonl
+finetuning/data/eval_pref.jsonl
+```
+
+Use `finetuning/data/sample_pref.jsonl` as the example format.
+
+```bash
+python finetuning/scripts/train_dpo.py \
+  --model_path /models/base-or-sft-model \
+  --train_file finetuning/data/train_pref.jsonl \
+  --eval_file finetuning/data/eval_pref.jsonl \
+  --output_dir runs/finetuning/dpo \
+  --use_lora \
+  --lora_r 16 \
+  --lora_alpha 32 \
+  --learning_rate 5e-6 \
+  --beta 0.1 \
+  --max_length 2048 \
+  --max_prompt_length 1024 \
+  --per_device_train_batch_size 1 \
+  --gradient_accumulation_steps 16 \
+  --bf16
+```
+
+Replace `/models/base-or-sft-model` with your SFT model path if you have one.
+
+## 8. Watch training
 
 ```bash
 tensorboard --logdir runs/
@@ -117,7 +150,7 @@ http://localhost:6006
 
 Loss should trend down, but loss is not quality. Always test the model on real prompts.
 
-## 8. Merge adapter
+## 9. Merge adapter
 
 ```bash
 python finetuning/scripts/merge_lora.py \
